@@ -32,7 +32,6 @@ Here is the [chapter titled "Classification"](https://davidkane9.github.io/PPBDS
 
 The data has been taken from the National Election Survey. Note that both ideology and party are measured in 7 point scales. `ideology` ranges from Strong liberal (1) to Strong Conservative (7). `party` ranges from Strong Democrat (1) to Strong Republican (7). `income` is measured on a 5 point scale ranging from very poor (1) to very rich (5). You may treat these variables as continuous. `dvote`  is our outcome variable. It is whether (1) or not (0) the person prefers the Democratic candidate for President
 
-
 **Prompt:**
 
 Explore the data and see the variables for yourself. See if anything looks strange in the summary.
@@ -44,6 +43,23 @@ You might notice `geom_point()` doesn't give an intuitive graph since the points
 Draw a regression line through this jittered data using `geom_smooth()`.
 
 Discuss whether a linear regression is appropriate for this. Is there a possibility of model predicting greater than 1 or less than 0 probability for `dvote`?
+
+
+```{r}
+
+glimpse(nes)
+
+summary(nes)
+
+skim(nes)
+
+nes_plot <- nes %>% 
+  ggplot(aes(x = income, y = dvote)) +
+    geom_jitter(alpha = 0.1, height = 0.1) +
+    geom_smooth(method = "lm")
+
+nes_plot
+```
 
 
 # Scene 2
@@ -62,7 +78,19 @@ Explain to your non-mathematical boss the relationship between income and prefer
 
 Optional (very hard!): Interpret the `estimate` for (Intercept). What does it mean? Think back to how we interpreted regression intercepts in the last two weeks. You *might* need to use the `qlogis()` function.
 
+```{r}
 
+model_1 <- glm(dvote ~ gender + income, family = "binomial", data = nes)
+
+model_1 %>% 
+  tidy(conf.int = TRUE) %>% 
+  select(term, estimate, conf.low, conf.high)
+
+# If I take the whole US population and divide them into 5 income buckets,
+# people one bucket higher are about 7% less likely to vote for Democrats. How
+# certain am I about that? about 7-8%.
+
+```
 
 
 # Scene 3
