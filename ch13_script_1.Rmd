@@ -103,6 +103,15 @@ What does the `.fitted` column means?
 
 Why does `.fitted` have the same value for every male with income = 3? (First, show that this is in fact true. Then explain why?)
 
+```{r}
+
+model_1 %>% 
+  augment(type.predict = "response", data = nes) %>% 
+  select(dvote, income, gender, .fitted)
+
+```
+
+
 
 
 # Scene 4
